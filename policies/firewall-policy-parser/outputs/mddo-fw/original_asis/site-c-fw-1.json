@@ -1,0 +1,143 @@
+{
+  "node": "site-c-fw-1",
+  "pair": {
+    "primary": {
+      "name": "site-c-fw-1",
+      "atypical_interfaces": [
+        {
+          "name": "fab0",
+          "role": "fabric",
+          "fabric_options": {
+            "member_interfaces": [
+              "ge-0/0/0"
+            ]
+          }
+        },
+        {
+          "name": "eth0",
+          "role": "control"
+        }
+      ]
+    },
+    "secondary": {
+      "name": "site-c-fw-2",
+      "atypical_interfaces": [
+        {
+          "name": "fab1",
+          "role": "fabric",
+          "fabric_options": {
+            "member_interfaces": [
+              "ge-7/0/0"
+            ]
+          }
+        },
+        {
+          "name": "eth0",
+          "role": "control"
+        }
+      ]
+    }
+  },
+  "policies": [
+    {
+      "from_zone": "trust",
+      "to_zone": "trust",
+      "rules": [
+        {
+          "name": "default-permit",
+          "source_address": [
+            "any"
+          ],
+          "destination_address": [
+            "any"
+          ],
+          "application": [
+            "any"
+          ],
+          "action": "permit"
+        }
+      ]
+    },
+    {
+      "from_zone": "trust",
+      "to_zone": "untrust",
+      "rules": [
+        {
+          "name": "default-permit",
+          "source_address": [
+            "any"
+          ],
+          "destination_address": [
+            "any"
+          ],
+          "application": [
+            "any"
+          ],
+          "action": "permit"
+        }
+      ]
+    },
+    {
+      "from_zone": "WAN",
+      "to_zone": "LAN",
+      "rules": [
+        {
+          "name": "DEFAULT",
+          "source_address": [
+            "any"
+          ],
+          "destination_address": [
+            "any"
+          ],
+          "application": [
+            "any"
+          ],
+          "action": "deny"
+        }
+      ]
+    },
+    {
+      "from_zone": "LAN",
+      "to_zone": "WAN",
+      "rules": [
+        {
+          "name": "DEFAULT",
+          "source_address": [
+            "any"
+          ],
+          "destination_address": [
+            "any"
+          ],
+          "application": [
+            "any"
+          ],
+          "action": "permit"
+        }
+      ]
+    }
+  ],
+  "zones": [
+    {
+      "name": "trust",
+      "interfaces": []
+    },
+    {
+      "name": "untrust",
+      "interfaces": []
+    },
+    {
+      "name": "WAN",
+      "interfaces": [
+        "ge-0/0/1.0",
+        "ge-7/0/1.0"
+      ]
+    },
+    {
+      "name": "LAN",
+      "interfaces": [
+        "ge-0/0/2.0",
+        "ge-7/0/2.0"
+      ]
+    }
+  ]
+}
