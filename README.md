@@ -1,4 +1,4 @@
-# mddo-bgp-queries
+# mddo-config-queries
 
 Batfish & Policy-parser 出力サンプル (参照/デモ説明用)
 * See also: [システムコンポーネントとその関係](https://github.com/ool-mddo/playground/blob/main/doc/system_architecture.md#システムコンポーネントとその関係)
