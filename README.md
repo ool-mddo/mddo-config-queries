@@ -7,7 +7,7 @@
 
 このリポジトリは、playground が生成したデータのうち代表的な network/snapshot のものを保管・公開し、**出力データのサンプルの例示・解説**に使うためのものです。(playground 本体のデータではなく、あくまで参照用のスナップショットです)
 
-* See also: [システムコンポーネントとその関係](https://github.com/ool-mddo/playground/blob/main/doc/system_architecture.md#システムコンポーネントとその関係)
+* See also: [システムコンポーネントとその関係](https://github.com/ool-mddo/playground/blob/main/docs/design_notes/system_architecture.md#システムコンポーネントとその関係)
 
 ### ディレクトリ構成
 
@@ -63,7 +63,7 @@ Firewallポリシ(ルール本体)のデータ取得についてはBatfishを利
 |original_asis_conduit2|土管化トポロジ (blueprintの zoom1-layer3 に対応)|[topology.json](./topologies/mddo-fw/original_asis_conduit2/topology.json)|
 
 - 各snapshotには、ネームスペース変換テーブル(`ns_convert_table.json`)も含みます。
-  - See also: [ネットワークのモデル](https://github.com/ool-mddo/playground/blob/main/doc/network_model.md)
+  - See also: [ネットワークのモデル](https://github.com/ool-mddo/playground/blob/main/docs/design_notes/network_model.md)
 - original_asis には mddo-bgp 同様の BGP/OSPF 等のレイヤに加え、firewall属性・FHRP属性が付与されています。
 
 ### Refocus topology usecase (blueprint / conduit)
@@ -143,7 +143,7 @@ BGPポリシ(ルール本体)のデータ取得についてはBatfishを利用�
 
 ### Topology (Output data)
 - [topology.json](./topologies/mddo-bgp/original_asis/topology.json)
-  - See also: [ネットワークのモデル](https://github.com/ool-mddo/playground/blob/main/doc/network_model.md)
+  - See also: [ネットワークのモデル](https://github.com/ool-mddo/playground/blob/main/docs/design_notes/network_model.md)
 
 ## mddo-ospf
 
