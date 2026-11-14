@@ -1,7 +1,27 @@
 # mddo-config-queries
 
-Batfish & Policy-parser 出力サンプル (参照/デモ説明用)
-* See also: [システムコンポーネントとその関係](https://github.com/ool-mddo/playground/blob/main/doc/system_architecture.md#システムコンポーネントとその関係)
+## このリポジトリの目的
+
+[ool-mddo/playground](https://github.com/ool-mddo/playground) は、ネットワークのコンフィグから Batfish クエリ・ポリシーパーサ・トポロジ生成などを経て、各種データを自動生成します。
+これらの生成データは playground では git 管理対象になっていないため、実際にどのようなデータが生成されるのかを後から参照できません。
+
+このリポジトリは、playground が生成したデータのうち代表的な network/snapshot のものを保管・公開し、**出力データのサンプルの例示・解説**に使うためのものです。(playground 本体のデータではなく、あくまで参照用のスナップショットです)
+
+* See also: [システムコンポーネントとその関係](https://github.com/ool-mddo/playground/blob/main/docs/design_notes/system_architecture.md#システムコンポーネントとその関係)
+
+### ディレクトリ構成
+
+playground 内のディレクトリ構成と同じパスで保管しています。
+
+|Directory|Content|playground での生成元|
+|---------|-------|--------------------|
+|`queries/<network>/<snapshot>/`|Batfish クエリ出力 (CSV)|batfish-wrapper|
+|`topologies/<network>/<snapshot>/`|トポロジデータ (`topology.json`, `ns_convert_table.json`)|playground (Batfishクエリからのトポロジ生成)|
+|`policies/firewall-policy-parser/`|firewall-policy-parser の入力(`configs`)と出力(`outputs`)|firewall-policy-parser|
+|`policies/bgp-policy-parser/`|bgp-policy-parser の入力(`configs`)、出力(`outputs`)、最終的なBGPポリシ(`bgp_policies`)|bgp-policy-parser|
+|`usecases/`|ユースケース用データ (例: 土管化の blueprint)|各ユースケース|
+
+* 下記の各ネットワークの説明は、これらのデータを例にした解説です。
 
 ## mddo-fw
 
@@ -43,7 +63,7 @@ Firewallポリシ(ルール本体)のデータ取得についてはBatfishを利
 |original_asis_conduit2|土管化トポロジ (blueprintの zoom1-layer3 に対応)|[topology.json](./topologies/mddo-fw/original_asis_conduit2/topology.json)|
 
 - 各snapshotには、ネームスペース変換テーブル(`ns_convert_table.json`)も含みます。
-  - See also: [ネットワークのモデル](https://github.com/ool-mddo/playground/blob/main/doc/network_model.md)
+  - See also: [ネットワークのモデル](https://github.com/ool-mddo/playground/blob/main/docs/design_notes/network_model.md)
 - original_asis には mddo-bgp 同様の BGP/OSPF 等のレイヤに加え、firewall属性・FHRP属性が付与されています。
 
 ### Refocus topology usecase (blueprint / conduit)
@@ -123,7 +143,7 @@ BGPポリシ(ルール本体)のデータ取得についてはBatfishを利用�
 
 ### Topology (Output data)
 - [topology.json](./topologies/mddo-bgp/original_asis/topology.json)
-  - See also: [ネットワークのモデル](https://github.com/ool-mddo/playground/blob/main/doc/network_model.md)
+  - See also: [ネットワークのモデル](https://github.com/ool-mddo/playground/blob/main/docs/design_notes/network_model.md)
 
 ## mddo-ospf
 
@@ -178,3 +198,25 @@ BGPポリシ(ルール本体)のデータ取得についてはBatfishを利用�
 | l2l3_sample3err | L2_sample3 + ルータ (異常系: 複数prefix混在セグメント) | [configs](https://github.com/corestate55/batfish-test-topology/tree/develop/l2l3_sample3err) | [Queries](./queries/batfish-test-topology/l2l3_sample3err/) | [topology](./topologies/batfish-test-topology/l2l3_sample3err/) |
 | l2l3_sample3err2 | L2_sample3 + ルータ (異常系: L3 IPアドレス重複) | [configs](https://github.com/corestate55/batfish-test-topology/tree/develop/l2l3_sample3err2) | [Queries](./queries/batfish-test-topology/l2l3_sample3err2/) | [topology](./topologies/batfish-test-topology/l2l3_sample3err2/) |
 | l2l3_sample3err3 | L2_sample3 + ルータ (異常系: L2ループ) | [configs](https://github.com/corestate55/batfish-test-topology/tree/develop/l2l3_sample3err3) | [Queries](./queries/batfish-test-topology/l2l3_sample3err3/) | [topology](./topologies/batfish-test-topology/l2l3_sample3err3/) |
+
+## playground からのデータ更新 (`copy_from_playground.sh`)
+
+playground 内の指定した network/snapshot に関連するファイルを、このリポジトリへ自動コピーするスクリプトです。(手動コピーによるコピー漏れを防ぐためのものです)
+
+```bash
+./copy_from_playground.sh [-n] [-p PLAYGROUND_DIR] NETWORK SNAPSHOT
+
+# 例: playground が ~/ool-mddo/playground にある場合
+./copy_from_playground.sh -n -p ~/ool-mddo/playground mddo-fw original_asis  # 確認のみ (dry-run)
+./copy_from_playground.sh -p ~/ool-mddo/playground mddo-fw original_asis     # コピー実行
+```
+
+|Option|Description|
+|------|-----------|
+|`-p PLAYGROUND_DIR`|playground のディレクトリ。省略時は環境変数 `PLAYGROUND_DIR`、それもなければ `$HOME/playground`|
+|`-n`|dry-run。コピーせず、コピー対象のファイル一覧のみ表示する|
+
+* コピー対象: 上記の各ディレクトリのうち、指定した network/snapshot に該当するもの
+  * snapshot 名に紐づく土管化トポロジ(`<snapshot>_conduit*`)と blueprint(`<snapshot>_blueprint*`、`params.yaml`)も含みます。
+* コピーしたファイルは1件ずつ表示されます。playground 側に存在しない対象は警告を出してスキップします。
+* ファイルの追加・上書きのみを行い、このリポジトリ側の余剰ファイルは削除しません。git 操作(add/commit 等)も行わないので、コピー後に `git status` / `git diff` で差分を確認してください。

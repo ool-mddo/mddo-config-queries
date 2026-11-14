@@ -90,7 +90,10 @@
             "any"
           ],
           "application": [
-            "junos-ping"
+            "junos-ping",
+            "junos-dns-udp",
+            "junos-dns-tcp",
+            "junos-http"
           ],
           "action": "permit"
         },
